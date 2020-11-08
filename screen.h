@@ -3,18 +3,18 @@
 
 class Screen {
     public:
-        //construtor
+        // Construtores
         Screen(int h, int w);
-        
-        //Destrutor
+
+        // Destrutor
         ~Screen();
 
-        //Getters
+        // Getters
         int getWidth() const;
         int getHeight() const;
         int get(int r, int c) const;
 
-        //Setters
+        // Setters
         void set(int r, int c, int val);
 
         int const EMPTY = 0, WALL = 1, SNAKE = 2, FOOD = 3;
@@ -23,4 +23,4 @@ class Screen {
         int **data = NULL, *dataHeight = NULL;
 };
 
-#endif //! Fim de SCREEN_H
+#endif //! SCREEN_H

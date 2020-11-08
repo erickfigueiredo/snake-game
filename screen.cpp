@@ -42,7 +42,7 @@ int Screen::getHeight() const{
 
 int Screen::get(int r, int c) const{
     //Verifica se as coordenada está fora dos limites da tela, caso afirmativo, returna WALL
-    if(r >= width || c >= height || r < 0 || c < 0)
+    if(c >= width || r >= height || r < 0 || c < 0)
         return WALL;
 
     //Caso a coordenada esteja dentro dos limites da tela verifica o estado do pixel
@@ -93,7 +93,10 @@ void Screen::set(int r, int c, int val){
             }else{
                 //Deleta as linhas da coluna data[c]
                 delete []data[c];
+
+                data[c] = new int[0];
             }
+            //Atualiza dataHeight
             dataHeight[c] = newTop + 1;
         }else{
             data[c][r] = val;

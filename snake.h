@@ -9,11 +9,11 @@ class Node{
     friend class Snake;
     private:
         // Construtor
-        Node(int r, int c): nRow(r), nCol(c), next(NULL), prev(Null){}
+        Node(int r, int c): nRow(r), nCol(c), next(NULL), prev(NULL){}
 
         // Membros de dados
         int nRow, nCol;
-        Node *next, *prev;
+        Node *prev, *next;
 };
 
 class Snake{
@@ -21,7 +21,7 @@ class Snake{
         // Para abstrair o iterador, vamos utilizar typedef
         typedef Node *iterator;
 
-        // Construtor
+        // Construtores
         Snake(int tam);
 
         // Destrutor
@@ -30,9 +30,10 @@ class Snake{
         // Getter
         int getLength() const;
         
-
         void draw(Screen &s, int state) const;
-        void move(int dr, int dc, bool eating); //Precisa ter complexidade O(1)
+        void move(int dr, int dc, bool eating);
+
+        bool isValid(int dr, int dc) const;
 
         // Métodos de manipulação da Lista Snake
         void pushBack(int row, int col);                                                     
@@ -41,7 +42,7 @@ class Snake{
 
         iterator  next(iterator current);
         iterator  prev(iterator current);
-
+        
     private:
         int getLength(iterator current) const;
         void destroy();
@@ -50,4 +51,4 @@ class Snake{
         Node *firstNode, *lastNode;
 };
 
-#endif
+#endif //! SNAKE_H

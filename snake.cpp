@@ -1,3 +1,10 @@
+/*
+    Desenvolvido por: @erickfigueiredo
+    Data: 04/11/2020
+    Disciplina: Estrutura de Dados
+    Professor: Salles Vianna
+*/
+
 #include "snake.h"
 
 Snake::Snake(int tam){
@@ -55,21 +62,49 @@ int Snake::getLength(iterator current) const{
 }
 
 void Snake::draw(Screen &s, int state) const {
-
+    iterator it = firstNode;
+    // Percorre todas os nodos setando as posições na tela
+    while(it){
+        s.set(it->nRow, it->nCol, state);
+        it = it->next;
+    }       
 }
 
 void Snake::move(int dr, int dc, bool eating){
     // A construção da estrutura de Snake teve início na calda
     if(eating){
-        // Se está comendo apenas adicionamos um novo nodo na posição em que se moveu
-        pushBack(dr, dc);
+        // Se está comendo apenas adiciona um novo nodo na posição em que se moveu
+        pushBack(dr + lastNode->nRow, dc + lastNode->nCol);
     }else{
-        // Se 
+        // Senão precisa mover toda a cobra, move o último elemento da calda para a cabeça
 
+        // Torna o primeiro elemento da lista o último
+        lastNode->next = firstNode;
+        lastNode->next->prev = lastNode;
+        lastNode = lastNode->next;
+
+        //Torna o segundo elemento da lista o primeiro
+        firstNode = lastNode->next;
+        firstNode->prev = NULL;
+        lastNode->next = NULL;
+
+        lastNode->prev->nRow += dr;
+        lastNode->prev->nCol += dc;
     }
+}
 
+bool Snake::isValid(int dr, int dc) const{
+    //Se a direção na linha for igual a ZERO
+    if(dr == 0)
+        // Verifica um movimento da esquerda para direita e se a cobra mantem esse movimento
+        if(lastNode->nCol - lastNode->prev->nCol > 0 && dc > 0)
+            return true;
+    else
+        // Verifica um movimento da direita para esquerda e se a cobra mantem esse movimento
+        if(lastNode->nCol - lastNode->prev->nCol < 0 && dc < 0)
+            return true;
 
-
+    return false;
 }
 
 Snake::iterator Snake::begin() const {
@@ -78,8 +113,8 @@ Snake::iterator Snake::begin() const {
 }
 
 Snake::iterator Snake::end() const {
-    // Retorna NULL como último endereço dos nodos de Snake
-    return NULL;
+    // Retorna o último nodo de Snake
+    return lastNode;
 }
 
 Snake::iterator Snake::next(iterator current) {
@@ -91,4 +126,3 @@ Snake::iterator Snake::prev(iterator current) {
      // Retorna o endereço do nodo anterior ao atual
     return current->prev;
 }
-
