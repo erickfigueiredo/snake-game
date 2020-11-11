@@ -13,6 +13,16 @@ Snake::Snake(int tam){
         pushBack(0, i);
 }
 
+Snake::Snake(const Snake &other){
+    // Chama a sobrecarga do operador de atribuição
+    *this = other;
+}
+
+Snake::~Snake(){
+    // Método para desalocar a memória alocada para os nodos
+    destroy();
+}
+
 void Snake::pushBack(int row, int col){
     // Verifica se Snake está inicialmente vazia
     if(firstNode == NULL) { 
@@ -24,11 +34,6 @@ void Snake::pushBack(int row, int col){
 		lastNode->next->prev = lastNode;
 		lastNode = lastNode->next;
 	}
-}
-
-Snake::~Snake(){
-    // Método para desalocar a memória alocada para os nodos
-    destroy();
 }
 
 void Snake::destroy() {
@@ -48,7 +53,7 @@ void Snake::destroy(iterator current) {
 }
 
 int Snake::getLength() const {
-    // Chamamos a sobrecarga do método para 
+    // Chama a sobrecarga do método para uma implementacao recursiva
     return getLength(firstNode);
 }
 
@@ -59,6 +64,24 @@ int Snake::getLength(iterator current) const{
     
     // Retorna 1, contabilizando o nodo atual somado à próxima iteração
     return 1 + getLength(current->next);
+}
+
+Snake &Snake::operator=(const Snake &other) {
+    // Testa autoatribuição
+    if(this == &other)
+        return *this;
+
+    // Deleta o objeto atual
+    destroy();
+
+    // Faz a cópia de todos os nodos de other
+
+    iterator it = other.begin();
+
+    while(it){
+        pushBack(it->nRow, it->nCol);
+        it = it->next;
+    }
 }
 
 void Snake::draw(Screen &s, int state) const {
@@ -88,23 +111,9 @@ void Snake::move(int dr, int dc, bool eating){
         firstNode->prev = NULL;
         lastNode->next = NULL;
 
-        lastNode->prev->nRow += dr;
-        lastNode->prev->nCol += dc;
+        lastNode->nRow = lastNode->prev->nRow + dr;
+        lastNode->nCol = lastNode->prev->nCol + dc;
     }
-}
-
-bool Snake::isValid(int dr, int dc) const{
-    //Se a direção na linha for igual a ZERO
-    if(dr == 0)
-        // Verifica um movimento da esquerda para direita e se a cobra mantem esse movimento
-        if(lastNode->nCol - lastNode->prev->nCol > 0 && dc > 0)
-            return true;
-    else
-        // Verifica um movimento da direita para esquerda e se a cobra mantem esse movimento
-        if(lastNode->nCol - lastNode->prev->nCol < 0 && dc < 0)
-            return true;
-
-    return false;
 }
 
 Snake::iterator Snake::begin() const {
@@ -113,7 +122,7 @@ Snake::iterator Snake::begin() const {
 }
 
 Snake::iterator Snake::end() const {
-    // Retorna o último nodo de Snake
+    // Retorna o último nodo com conteúdo de Snake
     return lastNode;
 }
 
@@ -126,3 +135,5 @@ Snake::iterator Snake::prev(iterator current) {
      // Retorna o endereço do nodo anterior ao atual
     return current->prev;
 }
+
+// --- FIM

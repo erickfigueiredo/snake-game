@@ -31,6 +31,7 @@ class Game{
         Screen scr;
         Food food[10];
         int nFood = 0;
+        int lstDRow = -2, lstDCol = -2;
 };
 
 #endif //! GAME_H

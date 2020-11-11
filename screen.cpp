@@ -11,14 +11,17 @@ Screen::Screen(int h, int w){
     height = h;
     width = w;
 
-    //Aloca a memória necessária para representar a tela do game
-    dataHeight = new int[width];
+    // Aloca a memória necessária para representar a tela do game
+    dataHeight = new int[width](); // O () ao final da alocação aciona o construtor padrão para as posições alocadas
     data = new int *[width];
 
-    for(int i = 0; i < width; i++){
-        dataHeight[i] = 0;
+    for(int i = 0; i < width; i++)
         data[i] = new int[0];
-    }
+}
+
+Screen::Screen(const Screen &other){
+    // Chama o operador de cópia
+    *this = other;
 }
 
 Screen::~Screen(){
@@ -39,6 +42,7 @@ int Screen::getHeight() const{
     //Retorna a altura da tela
     return height;
 }
+
 
 int Screen::get(int r, int c) const{
     //Verifica se as coordenada está fora dos limites da tela, caso afirmativo, returna WALL
@@ -65,17 +69,17 @@ void Screen::set(int r, int c, int val){
         return;
 
     //Se a posição estiver dentro do espaço já alocado
-    if(dataHeight[c]-1 <= r){
+    if(r <= dataHeight[c]-1){
         //Se a posição a ser inserida for a do topo e o valor for zero, precisará diminuir o espaço alocado
         if(dataHeight[c]-1 == r && val == EMPTY){
             //verifica se há um novo topo após retirar o elemento que estava lá
             int newTop = -1;
 
             for(int i = 0; i < r; i++)
-                if(i !=EMPTY)
+                if(data[c][i] !=EMPTY)
                     newTop = i;
 
-            //Se tiver alguma posição não vazia vamos realozar até ela
+            //Se tiver alguma posição não vazia vamos realocar até ela
             if(newTop != -1){
                 //Copia os elementos até o novo topo
                 int *copyLine = new int[newTop+1];
@@ -107,7 +111,7 @@ void Screen::set(int r, int c, int val){
         int *copyLine = data[c];
 
         //Aloca as novas linhas da coluna
-        data[c] = new int [r+1];
+        data[c] = new int [r+1]();
 
         //Copia os valores novamente
         for(int i = 0; i < dataHeight[c]; i++)
@@ -123,3 +127,33 @@ void Screen::set(int r, int c, int val){
         dataHeight[c] = r+1;
     }
 }
+
+Screen &Screen::operator=(const Screen &other){
+    // Caso se trate de uma autoatribuição retornamos o próprio objeto
+    if(this == &other)
+        return *this;
+
+    // Deleta o objeto atual
+    for(int i = 0; i < width; i++)
+        delete[] data[i];
+
+    delete []data;
+    delete []dataHeight;
+
+    // Faz a cópia de other para this
+    height = other.getHeight();
+    width = other.getWidth();
+
+    //Aloca a memória necessária para representar a tela do game
+    dataHeight = new int[width](); // O () ao final da alocação aciona o construtor padrão para as posições alocadas
+    data = new int *[width];
+
+    for(int i = 0; i < width; i++){
+        dataHeight[i] = other.dataHeight[i];
+        data[i] = new int[dataHeight[i]];
+        
+        for(int j = 0; j < dataHeight[i]; j++)
+            data[i][j] = other.data[i][j];
+    }
+}
+// --- FIM

@@ -5,8 +5,11 @@
 
 class Snake;
 class Node{
-    // Declaramos Snake como friend de 
+    // Declaramos Snake como friend de Node
     friend class Snake;
+    public:
+        int getRow() {return nRow;}
+        int getCol() {return nCol;}
     private:
         // Construtor
         Node(int r, int c): nRow(r), nCol(c), next(NULL), prev(NULL){}
@@ -23,6 +26,7 @@ class Snake{
 
         // Construtores
         Snake(int tam);
+        Snake(const Snake &other);
 
         // Destrutor
         ~Snake();
@@ -30,10 +34,11 @@ class Snake{
         // Getter
         int getLength() const;
         
+        // operador
+        Snake &operator=(const Snake &other);
+
         void draw(Screen &s, int state) const;
         void move(int dr, int dc, bool eating);
-
-        bool isValid(int dr, int dc) const;
 
         // Métodos de manipulação da Lista Snake
         void pushBack(int row, int col);                                                     

@@ -5,6 +5,7 @@ class Screen {
     public:
         // Construtores
         Screen(int h, int w);
+        Screen(const Screen &other);
 
         // Destrutor
         ~Screen();
@@ -16,6 +17,9 @@ class Screen {
 
         // Setters
         void set(int r, int c, int val);
+
+        // Operador
+        Screen &operator =(const Screen &other);
 
         int const EMPTY = 0, WALL = 1, SNAKE = 2, FOOD = 3;
     private:
