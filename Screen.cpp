@@ -5,7 +5,7 @@
     Professor: Salles Vianna
 */
 
-#include "screen.h"
+#include "Screen.h"
 
 Screen::Screen(int h, int w){
     height = h;
@@ -20,7 +20,7 @@ Screen::Screen(int h, int w){
 }
 
 Screen::Screen(const Screen &other){
-    // Chama o operador de cópia
+    // Chama o operador de atribuição
     *this = other;
 }
 
@@ -43,40 +43,44 @@ int Screen::getHeight() const{
     return height;
 }
 
-
 int Screen::get(int r, int c) const{
-    //Verifica se as coordenada está fora dos limites da tela, caso afirmativo, returna WALL
-    if(c >= width || r >= height || r < 0 || c < 0)
-        return WALL;
+    //Verifica se as coordenada está dentro dos limites da tela, caso negativo, retorna WALL
+    if(c < width && r < height && r >= 0 && c >= 0){
 
-    //Caso a coordenada esteja dentro dos limites da tela verifica o estado do pixel
+        //Caso a coordenada esteja dentro dos limites da tela verifica o estado do pixel
 
-    //Se em dataHeight o valor da coluna for ZERO, ou row for maior que o pixel mais alto da coluna retorna EMPTY
-    if(dataHeight[c] == 0 || r > dataHeight[c]-1)
-        return EMPTY;
-    
-    //Senão o valor está alocado em data e pode ser retornado com o acesso à posição de memória
-    switch(data[c][r]){
-        case 0: return EMPTY;
-        case 2: return SNAKE;
-        case 3: return FOOD;
+        //Se em dataHeight o valor da coluna for ZERO, ou row for maior que o pixel mais alto da coluna retorna EMPTY
+        if(dataHeight[c] == 0 || r > dataHeight[c]-1)
+            return Screen::EMPTY;
+        
+        //Senão o valor está alocado em data e pode ser retornado com o acesso à posição de memória
+        switch(data[c][r]){
+            case 0: 
+                return Screen::EMPTY;
+            case 2: 
+                return Screen::SNAKE;
+            case 3: 
+                return Screen::FOOD;
+        }
     }
+
+    return Screen::WALL;
 }
 
 void Screen::set(int r, int c, int val){
      //Se o valor for EMPTY e a posição não tiver sido alocada, não faz nada
-    if((val == EMPTY) && (dataHeight[c] == 0 || r > dataHeight[c]-1))
+    if((val == Screen::EMPTY) && (dataHeight[c] == 0 || r > dataHeight[c]-1))
         return;
 
     //Se a posição estiver dentro do espaço já alocado
-    if(r <= dataHeight[c]-1){
+    if(r < dataHeight[c]){
         //Se a posição a ser inserida for a do topo e o valor for zero, precisará diminuir o espaço alocado
-        if(dataHeight[c]-1 == r && val == EMPTY){
+        if(dataHeight[c]-1 == r && val == Screen::EMPTY){
             //verifica se há um novo topo após retirar o elemento que estava lá
             int newTop = -1;
 
             for(int i = 0; i < r; i++)
-                if(data[c][i] !=EMPTY)
+                if(data[c][i] != Screen::EMPTY)
                     newTop = i;
 
             //Se tiver alguma posição não vazia vamos realocar até ela
@@ -129,7 +133,7 @@ void Screen::set(int r, int c, int val){
 }
 
 Screen &Screen::operator=(const Screen &other){
-    // Caso se trate de uma autoatribuição retornamos o próprio objeto
+    // Autoatribuição retorna o próprio objeto
     if(this == &other)
         return *this;
 
@@ -155,5 +159,8 @@ Screen &Screen::operator=(const Screen &other){
         for(int j = 0; j < dataHeight[i]; j++)
             data[i][j] = other.data[i][j];
     }
+
+    return *this;
 }
+
 // --- FIM

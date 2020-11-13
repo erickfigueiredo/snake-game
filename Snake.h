@@ -1,18 +1,20 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 
-#include "screen.h"
+#include "Screen.h"
 
 class Snake;
+
 class Node{
     // Declaramos Snake como friend de Node
     friend class Snake;
     public:
         int getRow() {return nRow;}
         int getCol() {return nCol;}
+        
     private:
         // Construtor
-        Node(int r, int c): nRow(r), nCol(c), next(NULL), prev(NULL){}
+        Node(int r, int c): nRow(r), nCol(c), prev(nullptr), next(nullptr){}
 
         // Membros de dados
         int nRow, nCol;

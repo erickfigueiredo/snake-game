@@ -5,9 +5,12 @@
     Professor: Salles Vianna
 */
 
-#include "game.h"
+#include "Game.h"
 
-Game::~Game(){}
+Game::Game(int h, int w, int tam) : scr(h, w), snk(tam){
+    // Desenha a cobra na tela
+    snk.draw(scr, 2);
+}
 
 const Screen& Game::getScreen() const{
     // Retorna uma referência constante da tela
@@ -19,19 +22,30 @@ int Game::getNumFood() const{
     return nFood;
 }
 
+//--------------------------------------------------------------------------------------------------------------------------------------------
 bool Game::step(int dr, int dc){
-    // Desenha a cobra na tela
-    snk.draw(scr, 1);
-
+    
     // Verifica a validade do movimento
-    if(lstDRow == -2){
-        lstDRow = dr;
-        lstDCol = dc;
+    if(lastMRow == -2){
+        lastMRow = dr;
+        lastMCol = dc;
     }else{
-        // Se não for válido, repete o anterior 
-        if(dr == -lstDRow && dc == -lstDCol){
-            dr = lstDRow;
-            dc = lstDCol;
+        //Indica que o movimento anterior e o atual foram na vertical
+        if(dr && lastMRow){
+            // Se diferirem repete o anterior
+            if(dr != lastMRow)
+                dr = lastMRow;
+        
+        // Indica que o movimento anterior e o atual foram na horizontal
+        }else if(dc && lastMCol){
+            // Se diferirem repete o anterior 
+            if(dc != lastMCol)
+                dc = lastMCol;
+        
+        // Significa que o movimento anterior e o atual não estão no mesmo sentido
+        }else{
+            lastMRow = dr;
+            lastMCol = dc;
         }
     }
 
@@ -42,14 +56,15 @@ bool Game::step(int dr, int dc){
     switch(scr.get(auxRow, auxCol)){
         case 0:
             scr.set(snk.begin()->getRow(), snk.begin()->getCol(), 0);
-            snk.move(auxRow, auxCol, false);
+            snk.move(dr, dc, false);
             break;
         case 1:
         case 2:
             // Snake exerceu um movimento inválido
             return false;
         case 3:
-            snk.move(auxRow, auxCol, true);
+            scr.set(snk.begin()->getRow(), snk.begin()->getCol(), 0);
+            snk.move(dr, dc, true);
             break;
     }
 
@@ -60,14 +75,18 @@ bool Game::step(int dr, int dc){
             food[i].time--;
 
             // Se o tempo estiver chegado ao fim elimina a comida
-            if(food[i].time == 0 || (food[i].row == auxRow && food[i].col == auxCol))
+            if(food[i].time == 0 || (food[i].row == auxRow && food[i].col == auxCol)){
                 food[i].ativo = false;
+                scr.set(food[i].row, food[i].col, 0);
+            }
         }
     }
-    
+
+    snk.draw(scr, 2);
+
     return true;
 }
-
+//--------------------------------------------------------------------------------------------------------------------------------------------
 void Game::addFood(int r, int c, int ttl){
     // Verifica se a coordenada no mapa está vazia
     if(scr.get(r, c) == 0)

@@ -21,10 +21,10 @@ class Screen {
         // Operador
         Screen &operator =(const Screen &other);
 
-        int const EMPTY = 0, WALL = 1, SNAKE = 2, FOOD = 3;
+        static int const EMPTY = 0, WALL = 1, SNAKE = 2, FOOD = 3;
     private:
         int height, width;
-        int **data = NULL, *dataHeight = NULL;
+        int **data = nullptr, *dataHeight = nullptr;
 };
 
 #endif //! SCREEN_H

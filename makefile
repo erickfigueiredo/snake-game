@@ -1,14 +1,14 @@
-All: Snake.o Game.o Screen.o jogoSnake.o
-	g++ Snake.o Game.o Screen.o jogoSnake.o -o teste
+All: Screen.o Snake.o Game.o jogoSnakeAvaliaComandos.o
+		g++ Screen.o Snake.o Game.o jogoSnakeAvaliaComandos.o -o jogo
 
-Screen.o: Screen.h Screen.cpp
-	g++ Screen.h Screen.cpp -c
+Screen.o: Screen.h Screen.cpp 
+		g++ Screen.cpp -c
 
 Snake.o: Screen.h Snake.h Snake.cpp
-	g++ Snake.cpp -cpp
+		g++ Snake.cpp -c
 
-Game.o: Screen.h Snake.h Game.h Game.cpp
-	g++ Game.cpp -c
+Game.o: Screen.h Snake.h Game.h Game.cpp 
+		g++ Game.cpp -c
 
-jogoSnake.o: Game.h jogoSnake.cpp
-	g++ jogoSnake.cpp -c
+jogoSnakeAvaliaComandos.o: Game.h jogoSnakeAvaliaComandos.cpp
+		g++ jogoSnakeAvaliaComandos.cpp -c

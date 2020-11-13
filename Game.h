@@ -1,8 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "screen.h"
-#include "snake.h"
+#include "Screen.h"
+#include "Snake.h"
 
 // Struct para armazenar os dados de Food
 struct Food{
@@ -13,10 +13,7 @@ struct Food{
 class Game{
     public:
         // Construtores
-        Game(int h, int w, int tam): snk(tam), scr(h, w){}
-
-        //Destrutor
-        ~Game();
+        Game(int h, int w, int tam);
 
         // Getters
         const Screen& getScreen() const;
@@ -31,7 +28,7 @@ class Game{
         Screen scr;
         Food food[10];
         int nFood = 0;
-        int lstDRow = -2, lstDCol = -2;
+        int lastMRow = -2, lastMCol = -2;
 };
 
 #endif //! GAME_H
