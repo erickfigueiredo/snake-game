@@ -22,7 +22,6 @@ int Game::getNumFood() const{
     return nFood;
 }
 
-//--------------------------------------------------------------------------------------------------------------------------------------------
 bool Game::step(int dr, int dc){
     
     // Verifica a validade do movimento
@@ -52,6 +51,21 @@ bool Game::step(int dr, int dc){
     int auxRow = snk.end()->getRow()+dr;
     int auxCol = snk.end()->getCol()+dc;
 
+    for(int i = 0; i < 10; i++){
+        // Se houver comida
+        if(food[i].ativo){
+            // Se o tempo estiver chegado ao fim elimina a comida
+            if(food[i].time == 0){
+                food[i].ativo = false;
+                scr.set(food[i].row, food[i].col, 0);
+            }else if(food[i].row == auxRow && food[i].col == auxCol){
+                food[i].ativo = false;
+            }
+            // Decrementa o tempo ativo
+            food[i].time--;
+        }
+    }
+
     // Escolhe a ação de acordo com o próximo pixel, calculado a partir do movimento da cabeça
     switch(scr.get(auxRow, auxCol)){
         case 0:
@@ -65,28 +79,16 @@ bool Game::step(int dr, int dc){
         case 3:
             scr.set(snk.begin()->getRow(), snk.begin()->getCol(), 0);
             snk.move(dr, dc, true);
+            //Define a posição que estava a comida como EMPTY
+            scr.set(auxRow, auxCol, 0);
             break;
-    }
-
-    for(int i = 0; i < 10; i++){
-        // Se houver comida
-        if(food[i].ativo){
-            // Decrementa o tempo ativo
-            food[i].time--;
-
-            // Se o tempo estiver chegado ao fim elimina a comida
-            if(food[i].time == 0 || (food[i].row == auxRow && food[i].col == auxCol)){
-                food[i].ativo = false;
-                scr.set(food[i].row, food[i].col, 0);
-            }
-        }
     }
 
     snk.draw(scr, 2);
 
     return true;
 }
-//--------------------------------------------------------------------------------------------------------------------------------------------
+
 void Game::addFood(int r, int c, int ttl){
     // Verifica se a coordenada no mapa está vazia
     if(scr.get(r, c) == 0)
@@ -113,4 +115,4 @@ void Game::addFood(int r, int c, int ttl){
         }
 }
 
-// --- FIM
+//! FIM

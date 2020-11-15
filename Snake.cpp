@@ -78,7 +78,6 @@ void Snake::draw(Screen &s, int state) const {
     }       
 }
 
-// Verificar esse metodo em Game
 void Snake::move(int dr, int dc, bool eating){
     // A construção da estrutura de Snake teve início na calda
     if(eating){
@@ -136,4 +135,4 @@ Snake &Snake::operator=(const Snake &other) {
     return *this;
 }
 
-// --- FIM
+//! FIM
